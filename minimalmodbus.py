@@ -298,7 +298,9 @@ class Instrument:
     # ################################# #
 
     def read_bit(
-        self, registeraddress: int, functioncode: int = 2,
+        self,
+        registeraddress: int,
+        functioncode: int = 2,
         ignoreslaveaddress: bool = False,
     ) -> int:
         """Read one bit from the slave (instrument).
@@ -329,7 +331,10 @@ class Instrument:
         )
 
     def write_bit(
-        self, registeraddress: int, value: int, functioncode: int = 5,
+        self,
+        registeraddress: int,
+        value: int,
+        functioncode: int = 5,
         ignoreslaveaddress: bool = False,
     ) -> None:
         """Write one bit to the slave (instrument).
@@ -358,7 +363,10 @@ class Instrument:
         )
 
     def read_bits(
-        self, registeraddress: int, number_of_bits: int, functioncode: int = 2,
+        self,
+        registeraddress: int,
+        number_of_bits: int,
+        functioncode: int = 2,
         ignoreslaveaddress: bool = False,
     ) -> List[int]:
         """Read multiple bits from the slave (instrument).
@@ -398,7 +406,9 @@ class Instrument:
         return [int(x) for x in returnvalue]
 
     def write_bits(
-        self, registeraddress: int, values: List[int],
+        self,
+        registeraddress: int,
+        values: List[int],
         ignoreslaveaddress: bool = False,
     ) -> None:
         """Write multiple bits to the slave (instrument).
@@ -831,8 +841,11 @@ class Instrument:
         )
 
     def read_string(
-        self, registeraddress: int, number_of_registers: int = 16,
-        functioncode: int = 3, ignoreslaveaddress: bool = False,
+        self,
+        registeraddress: int,
+        number_of_registers: int = 16,
+        functioncode: int = 3,
+        ignoreslaveaddress: bool = False,
     ) -> str:
         """Read an ASCII string from the slave.
 
@@ -876,8 +889,11 @@ class Instrument:
         )
 
     def write_string(
-        self, registeraddress: int, textstring: str,
-        number_of_registers: int = 16, ignoreslaveaddress: bool = False,
+        self,
+        registeraddress: int,
+        textstring: str,
+        number_of_registers: int = 16,
+        ignoreslaveaddress: bool = False,
     ) -> None:
         """Write an ASCII string to the slave.
 
@@ -931,8 +947,11 @@ class Instrument:
         )
 
     def read_registers(
-        self, registeraddress: int, number_of_registers: int,
-        functioncode: int = 3, ignoreslaveaddress: bool = False
+        self,
+        registeraddress: int,
+        number_of_registers: int,
+        functioncode: int = 3,
+        ignoreslaveaddress: bool = False,
     ) -> List[int]:
         """Read integers from 16-bit registers in the slave.
 
@@ -978,7 +997,9 @@ class Instrument:
         return [int(x) for x in returnvalue]
 
     def write_registers(
-        self, registeraddress: int, values: List[int],
+        self,
+        registeraddress: int,
+        values: List[int],
         ignoreslaveaddress: bool = False,
     ) -> None:
         """Write integers to 16-bit registers in the slave.
@@ -1324,7 +1345,8 @@ class Instrument:
 
         # Communicate with instrument
         payload_from_slave = self._perform_command(
-            functioncode, payload_to_slave, ignoreslaveaddress)
+            functioncode, payload_to_slave, ignoreslaveaddress
+        )
 
         # There is no response for broadcasts
         if self.address == _SLAVEADDRESS_BROADCAST:
@@ -1349,8 +1371,10 @@ class Instrument:
     # #################################### #
 
     def _perform_command(
-        self, functioncode: int, payload_to_slave: bytes,
-        ignoreslaveaddress: bool = False
+        self,
+        functioncode: int,
+        payload_to_slave: bytes,
+        ignoreslaveaddress: bool = False,
     ) -> bytes:
         """Perform the command having the *functioncode*.
 
@@ -1412,8 +1436,7 @@ class Instrument:
 
         # Extract payload
         payload_from_slave = _extract_payload(
-            response_bytes, self.address, self.mode, functioncode,
-            ignoreslaveaddress
+            response_bytes, self.address, self.mode, functioncode, ignoreslaveaddress
         )
         return payload_from_slave
 
@@ -1843,7 +1866,10 @@ def _embed_payload(
 
 
 def _extract_payload(
-    response: bytes, slaveaddress: int, mode: str, functioncode: int,
+    response: bytes,
+    slaveaddress: int,
+    mode: str,
+    functioncode: int,
     ignoreslaveaddress: bool = False,
 ) -> bytes:
     """Extract the payload data part from the slave's response.
