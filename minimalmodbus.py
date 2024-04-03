@@ -1787,7 +1787,8 @@ def _embed_payload(
 
 
 def _extract_payload(
-    response: bytes, slaveaddress: int, mode: str, functioncode: int
+    response: bytes, slaveaddress: int, mode: str, functioncode: int,
+    ignoreslaveaddress: bool = False,
 ) -> bytes:
     """Extract the payload data part from the slave's response.
 
@@ -1797,6 +1798,7 @@ def _extract_payload(
         * slaveaddress: The adress of the slave. Used here for error checking only.
         * mode: The modbus protocol mode (MODE_RTU or MODE_ASCII)
         * functioncode: Used here for error checking only.
+        * ignoreslaveaddress: Bypass slave address check.
 
     Returns:
         The payload part of the *response*. Conversion from Modbus ASCII
@@ -1903,16 +1905,17 @@ def _extract_payload(
         )
         raise InvalidResponseError(text)
 
-    # Check slave address
-    responseaddress = response[_BYTEPOSITION_FOR_SLAVEADDRESS]
+    if not ignoreslaveaddress:
+        # Check slave address
+        responseaddress = response[_BYTEPOSITION_FOR_SLAVEADDRESS]
 
-    if responseaddress != slaveaddress:
-        raise InvalidResponseError(
-            "Wrong return slave "
-            + "address: {} instead of {}. The response is: {!r}".format(
-                responseaddress, slaveaddress, response
+        if responseaddress != slaveaddress:
+            raise InvalidResponseError(
+                "Wrong return slave "
+                + "address: {} instead of {}. The response is: {!r}".format(
+                    responseaddress, slaveaddress, response
+                )
             )
-        )
 
     # Check if slave indicates error
     _check_response_slaveerrorcode(response)
