@@ -996,6 +996,7 @@ class Instrument:
         signed: bool = False,
         byteorder: int = BYTEORDER_BIG,
         payloadformat: _Payloadformat = _Payloadformat.REGISTER,
+        ignoreslaveaddress: bool = False,
     ) -> Any:
         """Perform generic command for reading and writing registers and bits.
 
@@ -1013,6 +1014,7 @@ class Instrument:
               Only for a single register or for payloadformat='long'.
             * byteorder: How multi-register data should be interpreted.
             * payloadformat: An _Payloadformat enum
+            * ignoreslaveaddress: Bypass the slave address check
 
         If a value of 77.0 is stored internally in the slave register as 770,
         then use ``number_of_decimals=1`` which will divide the received data
@@ -1273,7 +1275,8 @@ class Instrument:
         )
 
         # Communicate with instrument
-        payload_from_slave = self._perform_command(functioncode, payload_to_slave)
+        payload_from_slave = self._perform_command(
+            functioncode, payload_to_slave, ignoreslaveaddress)
 
         # There is no response for broadcasts
         if self.address == _SLAVEADDRESS_BROADCAST:
