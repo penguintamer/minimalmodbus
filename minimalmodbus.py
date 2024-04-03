@@ -1297,7 +1297,10 @@ class Instrument:
     # Communication implementation details #
     # #################################### #
 
-    def _perform_command(self, functioncode: int, payload_to_slave: bytes) -> bytes:
+    def _perform_command(
+        self, functioncode: int, payload_to_slave: bytes,
+        ignoreslaveaddress: bool = False
+    ) -> bytes:
         """Perform the command having the *functioncode*.
 
         Args:
@@ -1305,6 +1308,7 @@ class Instrument:
               Can for example be 'Write register' = 16.
             * payload_to_slave: Data to be transmitted to the slave (will be
               embedded in slaveaddress, CRC etc)
+            * ignoreslaveaddress: Bypass the slave address check
 
         Returns:
             The extracted data payload from the slave. It has been
@@ -1357,7 +1361,8 @@ class Instrument:
 
         # Extract payload
         payload_from_slave = _extract_payload(
-            response_bytes, self.address, self.mode, functioncode
+            response_bytes, self.address, self.mode, functioncode,
+            ignoreslaveaddress
         )
         return payload_from_slave
 
